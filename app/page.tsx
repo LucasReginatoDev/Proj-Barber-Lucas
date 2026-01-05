@@ -1,5 +1,3 @@
-"use client";
-
 import Header from "app/_components/ui/header";
 import { Button } from "app/_components/ui/button";
 import { Input } from "./_components/ui/input";
@@ -8,8 +6,12 @@ import Image from "next/image";
 import { Card, CardContent } from "./_components/ui/card";
 import { Badge } from "./_components/ui/badge";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { db } from "./_lib/prisma";
+import BabershopItem from "./_components/ui/barbershop-item";
 
-const Home = () => {
+const Home = async () => {
+  const barbershops = await db.barbershop.findMany({});
+  console.log({ barbershops });
   return (
     <div>
       <Header />
@@ -34,6 +36,11 @@ const Home = () => {
         </div>
 
         {/* AGENDAMENTO */}
+
+        <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">
+          Agendamentos
+        </h2>
+
         <Card className="mt-6">
           <CardContent className="flex justify-between p-0">
             {/* ESQUERDA */}
@@ -49,13 +56,22 @@ const Home = () => {
               </div>
             </div>
             {/* DIREITA */}
-            <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid">
+            <div className="flex flex-col items-center justify-center px-8 border-l-2 border-solid">
               <p className="text-sm">Janeiro</p>
               <p className="text-2xl">04</p>
               <p className="text-sm">15:00</p>
             </div>
           </CardContent>
         </Card>
+
+        <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">
+          Recomendados
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {barbershops.map((barbershop) => (
+            <BabershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
     </div>
   );
